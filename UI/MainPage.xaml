@@ -3,38 +3,57 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
              xmlns:converters="clr-namespace:UI.Converters"
              xmlns:vm="clr-namespace:UI.ViewModels"
+             xmlns:base="clr-namespace:UI.Base"
              x:DataType="vm:MainViewModel"
              x:Class="UI.MainPage">
     <ContentPage.BindingContext>
         <vm:MainViewModel/>
     </ContentPage.BindingContext>
-    <ContentPage.Resources>
+    <ContentPage.Resources>        
+        <ControlTemplate x:DataType="base:BaseViewModel" x:Key="DefaultTemplate">
+            <ScrollView>
+                <VerticalStackLayout
+                    Spacing="25"
+                    Padding="30,0"
+                    VerticalOptions="Center">
+                    <Image
+                        Source="dotnet_bot.png"
+                        SemanticProperties.Description="Cute dot net bot waving hi to you!"
+                        HeightRequest="200"
+                        HorizontalOptions="Center" />
+
+                    <Label
+                        Text="Hello, World!"
+                        SemanticProperties.HeadingLevel="Level1"
+                        FontSize="32"
+                        HorizontalOptions="Center" />
+                    <Label
+                        HorizontalOptions="Center"
+                        Text="{Binding Title, FallbackValue='No Data Context', StringFormat='Title: {0}'}"/>
+                </VerticalStackLayout>
+            </ScrollView>
+        </ControlTemplate>
         <converters:ZeroToStringConverter TextWhenZero="Click me" x:Key="ZeroToStringConverter"/>
     </ContentPage.Resources>
-    <ScrollView>
-        <VerticalStackLayout
-            Spacing="25"
-            Padding="30,0"
-            VerticalOptions="Center">
-            <Image
-                Source="dotnet_bot.png"
-                SemanticProperties.Description="Cute dot net bot waving hi to you!"
-                HeightRequest="200"
-                HorizontalOptions="Center" />
-
-            <Label
-                Text="Hello, World!"
-                SemanticProperties.HeadingLevel="Level1"
-                FontSize="32"
-                HorizontalOptions="Center" />
-
-            <Label
-                Text="Welcome to .NET Multi-platform App UI"
-                SemanticProperties.HeadingLevel="Level2"
-                SemanticProperties.Description="Welcome to dot net Multi platform App U I"
-                FontSize="18"
-                HorizontalOptions="Center" />
-
+    <Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="*"/>
+		</Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <HorizontalStackLayout BindableLayout.ItemsSource="{Binding BreadCrumbs}" Grid.ColumnSpan="3">
+            <BindableLayout.ItemTemplate>
+                <DataTemplate x:DataType="base:BaseViewModel">
+                    <RadioButton Content="{Binding Title}" IsChecked="{Binding IsSelected}" GroupName="Navigation"/>
+                </DataTemplate>
+            </BindableLayout.ItemTemplate>
+        </HorizontalStackLayout>
+        <ContentView Grid.Row="1" Grid.ColumnSpan="3" ControlTemplate="{StaticResource DefaultTemplate}" BindingContext="{Binding SelectedViewModel}"/>
+        <StackLayout Grid.Row="2" Grid.ColumnSpan="3">
             <Button
                 Command="{Binding CounterCommand}"
                 Text="{Binding Counter, Converter={StaticResource ZeroToStringConverter}}"
@@ -44,8 +63,7 @@
                     <x:Int32>1</x:Int32>
                 </Button.CommandParameter>
             </Button>
-
-        </VerticalStackLayout>
-    </ScrollView>
+        </StackLayout>
+    </Grid>
 
 </ContentPage>

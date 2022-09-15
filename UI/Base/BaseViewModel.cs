@@ -16,6 +16,15 @@ namespace UI.Base
             set { title = value; OnPropertyChanged(); }
         }
 
+        private bool isSelected;
+
+        public bool IsSelected
+        {
+            get { return isSelected; }
+            set { isSelected = value; OnPropertyChanged(); }
+        }
+
+
         protected virtual void RefreshCommands(params IDelegateCommand[] commands)
         {
             foreach (var command in commands)
